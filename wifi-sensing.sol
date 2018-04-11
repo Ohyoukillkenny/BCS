@@ -9,12 +9,6 @@ contract SensingWifi{
     enum State {Uncreated, Created, Inactive}
     State public state;
 
-    // struct Data{
-    //     bytes32 loc;
-    //     int strength;
-    // }
-    // Data[] public dataCommits;
-
     mapping(bytes32 => string) dataStatuses; // Either '' or 'Committed'
 
     modifier condition(bool _condition) {
@@ -33,9 +27,11 @@ contract SensingWifi{
     }
 
     event Aborted();
-    event TaskInited();
+    event TaskInited(uint ru, uint rn, bytes32 wn);
+    event ViewTask(uint ru, uint rn, bytes32 wn, uint cnt);
     event DataCommited(bytes32 l, bytes32 w, int s);
     event TaskDone();
+    event dataCheck(uint cnt);
 
     /// Init the task as requster.
     /// The requster need to set the value of reward for each sensing data,
@@ -51,10 +47,8 @@ contract SensingWifi{
         rewardNum = _rewardNum;
         wifiName = _wifiName;
         state = State.Created;
-        emit TaskInited();
-        
+        emit TaskInited(_rewardUnit, _rewardNum, _wifiName);
     }
-
 
     /// Abort the Task and reclaim the ether,
     /// Can only be called by the requester.
@@ -68,9 +62,24 @@ contract SensingWifi{
         requester.transfer(this.balance);
         emit Aborted();
     }
-
+    
+    function getDataCnt()
+        public
+        onlyRequester
+        inState(State.Created)
+    {
+        emit dataCheck(dataCount);
+    }
+    
     /// Worker answer the task by sending data
     /// such as {"41-24-12.2-N 2-10-26.5-E", "SJTU", -51}
+    
+    function getTask()
+        public
+        inState(State.Created)
+    {
+        emit ViewTask(rewardUnit, rewardNum, wifiName, dataCount);
+    }
 
     function commitTask(bytes32 _location, bytes32 _wifiName, int _signalDegree)
         public
@@ -82,17 +91,11 @@ contract SensingWifi{
         require(sensingDataCommit.length == 0);
         
         // Make sure that the wifi signal sensed is what requester wants
-        require(wifiName == _wifiName);
+        require(wifiName==_wifiName);
         
         // The theoretical maximum value of signal strength is -30 dBm
         require(_signalDegree < -30);
         
-        // // restructure the sensing data
-        // // save the new data into dataCommits
-        // dataCommits.push(Data({
-        //     loc: _location,
-        //     strength: _signalDegree
-        // }));
         dataStatuses[_location] = "Committed";
         
         dataCount += 1;

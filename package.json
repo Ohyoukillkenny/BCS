@@ -1,0 +1,18 @@
+{
+  "name": "eth-project",
+  "version": "1.0.0",
+  "description": "eth project for crowdsensing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "lite-server"
+  },
+  "author": "lingkun",
+  "license": "ISC",
+  "dependencies": {
+    "web3": "github:ethereum/web3.js"
+  },
+  "devDependencies": {
+    "lite-server": "^2.3.0"
+  }
+}
