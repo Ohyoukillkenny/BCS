@@ -1,7 +1,7 @@
 # BCS — A simple Blockchain-based Crowdsensing System
 Here we use a simple wifi-sensing task as an instance to show how our framework works.
 
-Detailed introduction at: https://ohyoukillkenny.github.io/blog/04/11/LearnSolidity5/
+Detailed introduction at: https://ohyoukillkenny.github.io/blog/2018/04/10/LearnSolidity5/
 
 #### Installation:
 
